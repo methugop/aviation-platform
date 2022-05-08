@@ -1,15 +1,25 @@
 import * as cdk from '@aws-cdk/core';
-// import * as sqs from '@aws-cdk/aws-sqs';
+import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
+import AppSyncStack from './app-sync-stack';
+import LambdaConstruct from './lambda-construct';
 
 export class AviationPlatformStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    const aviationDBTable = new Table(this, 'Aviation-Platform-DB-Table', {
+      partitionKey: { name: 'attribute', type: AttributeType.STRING }
+    });
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'AviationPlatformQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    const volcatTable = new Table(this, 'Volcat-Table', {
+      partitionKey: { name: 'id', type: AttributeType.STRING }
+    });
+
+    const lambdaConstruct = new LambdaConstruct(this, 'Aviation-Platform-Lambda-Construct', {
+      dbTable: aviationDBTable.tableName,
+      volcatTable: volcatTable.tableName
+    });
+
+    new AppSyncStack(this, 'Aviation-Platform-AppSync', { lambdaConstruct, dbTable:aviationDBTable, volcatTable });
   }
 }

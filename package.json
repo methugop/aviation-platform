@@ -8,20 +8,37 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "local:dev": "ROLE=arn:aws:iam::279277563939:role/TAR-FT-Sandpit DB_TABLE=AviationPlatformStack-AviationPlatformDBTableF907EE98-1HZ1HW6PH2MEE ts-node ./lambdaTests/index.ts",
+    "local:prod": "ROLE=arn:aws:iam::661435741539:role/TAR-FT-Prod ts-node ./api/localTests/via.ts",
+    "dev:synth": "cdk synth --profile hpage-forecasttools-sandpit",
+    "dev:deploy": "cdk deploy --profile hpage-forecasttools-sandpit",
+    "prod:synth": "cdk synth --profile hpage-forecasttools-prod",
+    "prod:deploy": "cdk deploy --profile hpage-forecasttools-prod"
   },
   "devDependencies": {
     "@aws-cdk/assertions": "1.134.0",
+    "@types/aws-lambda": "^8.10.93",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
+    "aws-cdk": "1.134.0",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
-    "aws-cdk": "1.134.0",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7"
   },
   "dependencies": {
+    "@aws-cdk/aws-appsync": "1.134.0",
+    "@aws-cdk/aws-dynamodb": "1.134.0",
+    "@aws-cdk/aws-lambda": "1.134.0",
+    "@aws-cdk/aws-lambda-event-sources": "1.134.0",
+    "@aws-cdk/aws-lambda-nodejs": "1.134.0",
     "@aws-cdk/core": "1.134.0",
+    "@metservice/aviationtypes": "^1.0.1",
+    "@okta/jwt-verifier": "^2.3.0",
+    "aws-lambda": "^1.0.7",
+    "aws-sdk": "^2.1106.0",
+    "moment": "^2.29.2",
     "source-map-support": "^0.5.16"
   }
 }

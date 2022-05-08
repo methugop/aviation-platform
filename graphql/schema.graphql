@@ -1,0 +1,108 @@
+type Coordinates {
+    lat: Float!
+    long: Float!
+}
+
+type VolcanicAlert {
+	level: String
+	activity: String
+	hazards: String
+	acc: String
+	volcanoID: String
+	msg: String
+}
+
+type Geometry {
+    coordinates: [Float]!
+    type: String!
+}
+
+type Volcano {
+	code: String!
+	coordinates: Coordinates!
+	drumLink: String
+	index: Int!
+	location: String!
+	mountain: String
+	name: String!
+	s3Link: String!
+	volcanicAlerts: VolcanicAlert
+	relatedVolcanoes: [String!]
+	gnsID: String
+	FIT_ID: String
+}
+
+type LightningProperties {
+    name: String!
+    region: String!
+    type: String!
+    twentyKStrikes: Int!
+    hundredKStrikes: Int!
+    alertLevel: String!
+};
+
+type LightningFeature {
+	type: String!
+	properties: LightningProperties!
+	geometry: Geometry!
+};
+
+type LightningGeoJSON {
+    type: String
+    features: [LightningFeature]
+}
+
+type LightningState {
+    severity: String!
+    msg: String!
+}
+
+type Lightning {
+	strikes: LightningGeoJSON!
+	formattedResponse: LightningState!
+	timestamp: String!
+}
+
+type Observation {
+	time: String!
+	measurement: Float!
+	error: Float! 
+}
+
+type VolcanoObservation {
+	CO2: [Observation]
+	H2S: [Observation]
+	SO2: [Observation]
+}
+
+type AllEmissions {
+	WI: VolcanoObservation
+	NA: VolcanoObservation
+	RU: VolcanoObservation
+}
+
+type Query {
+    fetchVolcanoes: [Volcano]
+	fetchLightning: [Lightning]
+	fetchEmissions: AllEmissions
+}
+
+type Volcat {
+	id: ID
+	volcano: String
+	country: String
+}
+
+input NewVolcat {
+	id: ID!
+	volcano: String!
+	country: String!
+}
+
+type Mutation {
+	addVolcat(id: ID!, volcano: String!, country: String!): Volcat!
+}
+
+type Subscription {
+	onNewVolcat: Volcat @aws_subscribe(mutations: ["addVolcat"])
+}
