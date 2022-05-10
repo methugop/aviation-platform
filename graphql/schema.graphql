@@ -81,26 +81,35 @@ type AllEmissions {
 	RU: VolcanoObservation
 }
 
-type Query {
-    fetchVolcanoes: [Volcano]
-	fetchLightning: [Lightning]
-	fetchEmissions: AllEmissions
-}
-
 type Volcat {
 	id: ID
-	volcano: String
-	country: String
+	viewed: Boolean
+	vaacRegion: String
+	header: String
+	startDate: String
+	coordinates: [Float]
+	content: String
 }
 
 input NewVolcat {
 	id: ID!
-	volcano: String!
-	country: String!
+	viewed: Boolean!
+	vaacRegion: String!
+	header: String!
+	startDate: String!
+	coordinates: [Float]!
+	content: String!
+}
+
+type Query {
+    fetchVolcanoes: [Volcano]
+	fetchLightning: [Lightning]
+	fetchEmissions: AllEmissions
+	fetchVolcats: [Volcat]
 }
 
 type Mutation {
-	addVolcat(id: ID!, volcano: String!, country: String!): Volcat!
+	addVolcat(id: ID!, header: String!, viewed: Boolean!, vaacRegion: String!, content: String!, startDate: String!, coordinates: [Float]!): Volcat!
 }
 
 type Subscription {

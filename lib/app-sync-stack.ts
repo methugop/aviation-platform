@@ -21,10 +21,12 @@ class AppSyncStack extends Construct{
         const fetchEmissions = lambdaConstruct.define('FetchEmissions', '/emissions/fetch-emissions');
         const addVolcat = lambdaConstruct.define('AddVolcat', '/volcat/push-volcat');
         const onNewVolcat = lambdaConstruct.define('OnNewVolcat', '/volcat/volcat-subscribe');
+        const fetchVolcats = lambdaConstruct.define('FetchVolcats', '/volcat/fetch-volcats');
 
         dbTable.grantReadWriteData(fetchVolcanoes);
         dbTable.grantReadWriteData(fetchLightning);
         volcatTable.grantReadWriteData(addVolcat);
+        volcatTable.grantReadData(fetchVolcats);
         const api = new GraphqlApi(scope, 'Aviation-Platform-GraphQLAPI', {
             name: 'Aviation Platform GraphQL API',
             schema: Schema.fromAsset('graphql/schema.graphql'),
@@ -44,7 +46,8 @@ class AppSyncStack extends Construct{
         const lambdaLightning = api.addLambdaDataSource('lightningDataSource', fetchLightning);
         const lambdaEmissions = api.addLambdaDataSource('emissionsDataSource', fetchEmissions);
         const volcatLambda = api.addLambdaDataSource('volcatDataSource', addVolcat);
-        const volcatSubscribe = api.addLambdaDataSource("onNewVolcat", onNewVolcat)
+        const volcatSubscribe = api.addLambdaDataSource("onNewVolcat", onNewVolcat);
+        const volcatFetch = api.addLambdaDataSource("fetchVolcats", fetchVolcats);
 
         lambdaVolcanoes.createResolver({
             typeName: "Query",
@@ -58,6 +61,10 @@ class AppSyncStack extends Construct{
             typeName: "Query",
             fieldName: "fetchEmissions"
         });
+        volcatFetch.createResolver({
+            typeName: "Query",
+            fieldName: "fetchVolcats"
+        })
         volcatLambda.createResolver({
             typeName: "Mutation",
             fieldName: "addVolcat",
